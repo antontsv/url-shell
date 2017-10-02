@@ -97,7 +97,6 @@ func main() {
 	}
 
 	script := tostring(&buf)
-	_ = script
 
 	if *execute {
 		execName, err := osext.Executable()
