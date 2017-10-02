@@ -36,9 +36,16 @@ Next time you create shell script, and expose it on the Internet, also produce d
 `gpg --detach-sign -a someshellscript.sh`
 
 
-Than this:
-`curl -L https://someshellscript.sh | sh`
+Result
+======
+The following:
 
-can be replaced with this:
+`curl -s -L https://someshellscript.sh | sh`
+
+can now be replaced with this:
+
 `urlsh https://someshellscript.sh`
+
 given https://someshellscript.sh is original script, and https://someshellscript.sh.asc its detached PGP signature
+
+Yes, it requires end users to get `urlsh` in advance, but gives them piece of mind in a long term.
