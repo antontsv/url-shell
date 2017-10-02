@@ -9,7 +9,7 @@ How many times have you seen instructions to download and install some thing usi
 Some may even be on clear text `http`.
 It is quick and easy to get scripts from web pages and run them in your shell.
 
-This was is convenient, but yet scary, given that HTTP can be intercepted using MITM attack, web servers can be compromised,
+This way is convenient, but yet scary, given that HTTP can be intercepted using MITM attack, web servers can be compromised,
 company privacy and security policies can change like the hosting provider, etc...
 
 As you have seen many software companies provide checksums and PGP signatures with their software. They expect you to have GPG-suite installed and full keyring be present on every computer you download the software to.

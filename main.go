@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/kardianos/osext"
 	"golang.org/x/crypto/openpgp"
 )
 
@@ -99,8 +100,12 @@ func main() {
 	_ = script
 
 	if *execute {
+		execName, err := osext.Executable()
+		if err != nil {
+			log.Fatal("Cannot get full path of the current program")
+		}
 		envname := "URL_SHELL_EXEC"
-		err := os.Setenv(envname, os.Args[0])
+		err = os.Setenv(envname, execName)
 		if err != nil {
 			log.Fatalf("should not set env var %s: %v\n", envname, err)
 		}
