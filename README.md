@@ -21,7 +21,7 @@ As a script author I can produce:
 * PGP signature `someshellscript.sh.asc`
 * Embed my public key into `url-shell`, and do downloads using this script instead of cURL
 
-Given that you distribute your version of `url-shell` in advance, when your users can verify your identity once. They can download your present and future scripts without worrying is beign compromised in between authors development environment and your destination computer. I rely on author to take good care of the PGP private key.
+Given that you distribute your version of `url-shell` in advance, when your users can verify your identity once. They can download your present and future scripts without worrying it beign compromised when its delivered from author's development environment to your destination computer. I rely on author to take good care of the PGP private key.
 
 Build your own
 ==============
