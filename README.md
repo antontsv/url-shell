@@ -49,3 +49,11 @@ can now be replaced with this:
 given https://someshellscript.sh is original script, and https://someshellscript.sh.asc its detached PGP signature
 
 Yes, it requires end users to get `urlsh` in advance, but gives them piece of mind in a long term.
+
+
+Compiled binary
+===============
+
+Binary with [my key](https://keybase.io/antontsv/pgp_keys.asc?fingerprint=ebcdc302806fc4116e04353a95ffc5ebeefdbbb5) built-in mac be obtained at keybase:
+* [for MacOS](https://antontsv.keybase.pub/macos-urlsh?dl=1)
+* [for Linux](https://antontsv.keybase.pub/urlsh?dl=1)
