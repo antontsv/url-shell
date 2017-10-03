@@ -55,5 +55,16 @@ Compiled binary
 ===============
 
 Binary with [my key](https://keybase.io/antontsv/pgp_keys.asc?fingerprint=ebcdc302806fc4116e04353a95ffc5ebeefdbbb5) built-in mac be obtained at keybase:
-* [for MacOS](https://antontsv.keybase.pub/macos-urlsh?dl=1)
-* [for Linux](https://antontsv.keybase.pub/urlsh?dl=1)
+* for MacOS: [macos-urlsh](https://antontsv.keybase.pub/macos-urlsh?dl=1)
+* for Linux: [urlsh](https://antontsv.keybase.pub/urlsh?dl=1)
+
+Example
+=======
+
+I posted my dotfiles online along side with the shell scripts to install them:
+
+What was previously:
+`curl -s -L 'https://git.io/all.files' | bash`
+
+is now:
+`urlsh https://git.io/all.files`
