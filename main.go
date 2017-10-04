@@ -19,6 +19,11 @@ import (
 	"golang.org/x/crypto/openpgp"
 )
 
+type download struct {
+	resType string
+	resp    *http.Response
+}
+
 func main() {
 
 	maxbytes := flag.Int64("max_bytes", 1048576, "Max number of bytes to download. Used to prevent unexpectedly large downloads")
@@ -39,11 +44,6 @@ func main() {
 		log.Fatal("No public key was set during script compile time")
 	}
 
-	type Download struct {
-		resType string
-		resp    *http.Response
-	}
-
 	mainCtx, mainCancel := context.WithCancel(context.Background())
 	defer mainCancel()
 
@@ -55,7 +55,7 @@ func main() {
 		mainCancel()
 	}()
 
-	downloadc := make(chan Download)
+	downloadc := make(chan download)
 	downloader := func(name string, url string) {
 		req, err := http.NewRequest(http.MethodGet, url, nil)
 		ctx, cancel := context.WithTimeout(mainCtx, *maxdownload)
@@ -68,7 +68,7 @@ func main() {
 			}
 			log.Fatalf("Could not download %s from %s: %v\n", name, url, err)
 		}
-		downloadc <- Download{resType: name, resp: resp}
+		downloadc <- download{resType: name, resp: resp}
 	}
 
 	const (
