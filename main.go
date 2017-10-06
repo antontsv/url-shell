@@ -44,6 +44,12 @@ func main() {
 		log.Fatal("No public key was set during script compile time")
 	}
 
+	downloadAndExec(url, *surl, *showsigner, *execute, *maxbytes, *maxdownload, *maxexecution)
+
+}
+
+func downloadAndExec(url string, sigurl string, showsig bool, doexec bool, maxbytes int64, maxdown, maxexec time.Duration) {
+
 	mainCtx, mainCancel := context.WithCancel(context.Background())
 	defer mainCancel()
 
@@ -58,7 +64,7 @@ func main() {
 	downloadc := make(chan download)
 	downloader := func(name string, url string) {
 		req, err := http.NewRequest(http.MethodGet, url, nil)
-		ctx, cancel := context.WithTimeout(mainCtx, *maxdownload)
+		ctx, cancel := context.WithTimeout(mainCtx, maxdown)
 		defer cancel()
 		req = req.WithContext(ctx)
 		resp, err := http.DefaultClient.Do(req)
@@ -77,7 +83,7 @@ func main() {
 	)
 
 	go downloader(resContent, url)
-	go downloader(resSig, *surl)
+	go downloader(resSig, sigurl)
 
 	keyring, err := openpgp.ReadArmoredKeyRing(strings.NewReader(publicKey))
 	if err != nil {
@@ -98,7 +104,7 @@ func main() {
 	defer downloads[resSig].Body.Close()
 
 	var buf bytes.Buffer
-	tee := io.TeeReader(io.LimitReader(downloads[resContent].Body, *maxbytes), &buf)
+	tee := io.TeeReader(io.LimitReader(downloads[resContent].Body, maxbytes), &buf)
 
 	entity, err := openpgp.CheckArmoredDetachedSignature(keyring, tee, downloads[resSig].Body)
 	if err != nil {
@@ -106,7 +112,7 @@ func main() {
 		return
 	}
 
-	if *showsigner {
+	if showsig {
 		for _, v := range entity.Identities {
 			fmt.Printf("Downloaded content was signed by: %v\n", v.UserId.Name)
 		}
@@ -121,7 +127,7 @@ func main() {
 		return string(b)
 	}
 
-	if *execute {
+	if doexec {
 		script := tostring(&buf)
 		execName, err := osext.Executable()
 		if err != nil {
@@ -132,7 +138,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("should not set env var %s: %v\n", envname, err)
 		}
-		ctx, cancel := context.WithTimeout(mainCtx, *maxexecution)
+		ctx, cancel := context.WithTimeout(mainCtx, maxexec)
 		defer cancel()
 		cmd := exec.CommandContext(ctx, "/usr/bin/env", "bash", "-c", script)
 		cmd.Stderr = os.Stderr
