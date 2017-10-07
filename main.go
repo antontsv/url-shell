@@ -14,14 +14,25 @@ import (
 	"github.com/kardianos/osext"
 )
 
+const (
+	envSelfName = "URL_SHELL_EXEC"
+	envDefShell = "URL_SHELL_NAME"
+)
+
 func main() {
+
+	defShell := os.Getenv(envDefShell)
+	if defShell == "" {
+		defShell = "bash"
+	}
 
 	maxbytes := flag.Int("max_bytes", 1048576, "Max number of bytes to download. Used to prevent unexpectedly large downloads")
 	surl := flag.String("sig_url", "", "URL for detached PGP signature file. Default is source URL with .asc appended at the end")
 	showsigner := flag.Bool("show_signer", false, "Show the name of a signer for the URL")
-	execute := flag.Bool("do_exec", true, "Execute downloaded content in bash")
+	execute := flag.Bool("do_exec", true, "Execute downloaded content in selected shell")
 	maxdownload := flag.Duration("max_download_time", 60*time.Second, "Max time interval to attempt download")
 	maxexecution := flag.Duration("max_exec_time", 10*time.Minute, "Max time interval to execute script")
+	shell := flag.String("shell", defShell, "Shell to invoke for the downloaded commands")
 
 	flag.Parse()
 
@@ -67,14 +78,11 @@ func main() {
 		if err != nil {
 			log.Fatal("Cannot get full path of the current program")
 		}
-		envname := "URL_SHELL_EXEC"
-		err = os.Setenv(envname, execName)
-		if err != nil {
-			log.Fatalf("should not set env var %s: %v\n", envname, err)
-		}
+		setEnv(envSelfName, execName)
+		setEnv(envDefShell, *shell)
 		ctx, cancel := context.WithTimeout(mainCtx, *maxexecution)
 		defer cancel()
-		cmd := exec.CommandContext(ctx, "/usr/bin/env", "bash", "-c", download.Content)
+		cmd := exec.CommandContext(ctx, "/usr/bin/env", *shell, "-c", download.Content)
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = os.Stdout
 		err = cmd.Run()
@@ -83,4 +91,11 @@ func main() {
 		}
 	}
 
+}
+
+func setEnv(name, value string) {
+	err := os.Setenv(name, value)
+	if err != nil {
+		log.Fatalf("should not set env var %s: %v\n", name, err)
+	}
 }
