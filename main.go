@@ -48,9 +48,9 @@ func main() {
 	mainCtx, mainCancel := context.WithCancel(context.Background())
 	defer mainCancel()
 
-	signl := make(chan os.Signal)
-	signal.Notify(signl, os.Interrupt)
 	go func() {
+		signl := make(chan os.Signal)
+		signal.Notify(signl, os.Interrupt)
 		s := <-signl
 		fmt.Fprintf(os.Stderr, "Got signal: %v, canceling processes in flight...\n", s)
 		mainCancel()
