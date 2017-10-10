@@ -30,7 +30,7 @@ func main() {
 	surl := flag.String("sig_url", "", "URL for detached PGP signature file. Default is source URL with .asc appended at the end")
 	showsigner := flag.Bool("show_signer", false, "Show the name of a signer for the URL")
 	execute := flag.Bool("do_exec", true, "Execute downloaded content in selected shell")
-	maxdownload := flag.Duration("max_download_time", 60*time.Second, "Max time interval to attempt download")
+	timeout := flag.Duration("max_download_time", 60*time.Second, "Max time interval to attempt download")
 	maxexecution := flag.Duration("max_exec_time", 10*time.Minute, "Max time interval to execute script")
 	shell := flag.String("shell", defShell, "Shell to invoke for the downloaded commands")
 
@@ -60,9 +60,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	downloader.MaxBytes = *maxbytes
-	downloader.MaxTime = *maxdownload
-	download, err := downloader.Download(mainCtx, url, *surl)
+	req := sigdown.Request{
+		URL:      url,
+		SigURL:   *surl,
+		MaxBytes: *maxbytes,
+		Timeout:  *timeout,
+	}
+	download, err := downloader.Download(mainCtx, req)
 	if err != nil {
 		log.Fatal(err)
 	}
