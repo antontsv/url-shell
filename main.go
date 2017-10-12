@@ -86,7 +86,7 @@ func main() {
 		setEnv(envDefShell, *shell)
 		ctx, cancel := context.WithTimeout(mainCtx, *maxexecution)
 		defer cancel()
-		cmd := exec.CommandContext(ctx, "/usr/bin/env", *shell, "-c", download.Content)
+		cmd := exec.CommandContext(ctx, "/usr/bin/env", *shell, "-c", string(download.Content))
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = os.Stdout
 		err = cmd.Run()
