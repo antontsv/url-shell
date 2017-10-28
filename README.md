@@ -57,6 +57,7 @@ Compiled binary
 Binary with [my key](https://keybase.io/antontsv/pgp_keys.asc?fingerprint=ebcdc302806fc4116e04353a95ffc5ebeefdbbb5) built-in mac be obtained at keybase:
 * for MacOS: [macos-urlsh](https://antontsv.keybase.pub/macos-urlsh?dl=1)
 * for Linux: [urlsh](https://antontsv.keybase.pub/urlsh?dl=1)
+* for Linux/Arm64: [arm64-urlsh](https://antontsv.keybase.pub/arm64-urlsh?dl=1)
 
 Example
 =======
